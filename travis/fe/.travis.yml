@@ -1,0 +1,27 @@
+language: node_js
+
+node_js:
+  - "lts/*"
+
+branches:
+  only:
+    - master
+    - develop
+    - /feature\/*/
+
+notifications:
+ email: false
+ slack:
+   rooms:
+     - 슬랙workspace:슬랙_트레비스_토큰#슬랙채널
+
+install:
+  - yarn
+
+script:
+  - eslint src/.
+  - yarn test
+  - yarn build
+  - if [[ "$TRAVIS_BRANCH" == "develop" ]] && [[ "$TRAVIS_PULL_REQUEST" == false ]]; then curl -X GET DEVELOP일경우_시그널보낼_URL 
+  elif [[ "$TRAVIS_BRANCH" == "master" ]] && [[ "$TRAVIS_PULL_REQUEST" == false ]]; then curl -X GET MASTER일경우_시그널보낼_URL ; 
+  fi

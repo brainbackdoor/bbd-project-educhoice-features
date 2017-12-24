@@ -1,0 +1,23 @@
+
+### Backup Release Policy (Static Web Site Hosting With CloudFront)
+{
+    "Version": "2012-10-17",
+    "Statement": [
+        {
+            "Effect": "Allow",
+            "Principal": {
+                "AWS": "*"
+            },
+            "Action": "s3:GetObject",
+            "Resource": "[Put In Your AWS S3 Bucket ARN]/*"
+        },
+        {
+            "Effect": "Allow",
+            "Principal": {
+                "AWS": "Put In Your IAM ARN"
+            },
+            "Action": "s3:PutObject",
+            "Resource": "[Put In Your AWS S3 Bucket ARN]/*"
+        }
+    ]
+}
