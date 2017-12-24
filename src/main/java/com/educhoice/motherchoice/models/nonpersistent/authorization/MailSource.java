@@ -1,4 +1,4 @@
-package com.educhoice.motherchoice.utils;
+package com.educhoice.motherchoice.models.nonpersistent.authorization;
 
 import org.springframework.beans.factory.annotation.Value;
 

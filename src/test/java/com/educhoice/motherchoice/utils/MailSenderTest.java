@@ -13,6 +13,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.context.SpringBootTest.WebEnvironment;
 import org.springframework.test.context.junit4.SpringRunner;
 
+import com.educhoice.motherchoice.models.nonpersistent.authorization.MailSource;
 import com.educhoice.motherchoice.models.nonpersistent.authorization.Token;
 
 import io.restassured.RestAssured;
