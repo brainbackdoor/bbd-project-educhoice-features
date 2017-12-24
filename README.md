@@ -12,3 +12,7 @@ This example is treating events with **CURL**, but there may be a better archite
 ### Architecture
 ![gitflow_architecture](./images/gitflow_final.PNG) 
 
+### Notification Example
+
+![notification_example](./images/noti_example.PNG) 
+
