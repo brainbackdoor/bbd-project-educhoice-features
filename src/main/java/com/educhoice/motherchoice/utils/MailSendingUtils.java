@@ -1,38 +1,35 @@
 package com.educhoice.motherchoice.utils;
 
-import java.util.Properties;
+import com.educhoice.motherchoice.models.nonpersistent.authorization.MailSource;
+import com.educhoice.motherchoice.models.nonpersistent.authorization.Token;
+import org.springframework.stereotype.Component;
 
-import javax.mail.Message;
-import javax.mail.MessagingException;
-import javax.mail.PasswordAuthentication;
-import javax.mail.Session;
-import javax.mail.Transport;
+import javax.mail.*;
 import javax.mail.internet.AddressException;
 import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeMessage;
+import java.util.Properties;
 
-import org.springframework.beans.factory.annotation.Value;
-
-import com.educhoice.motherchoice.models.nonpersistent.authorization.MailSource;
-import com.educhoice.motherchoice.models.nonpersistent.authorization.Token;
-
-
-public class MailSender {
+@Component
+public class MailSendingUtils {
 
 	final String HOST = "smtp.naver.com";
 
 	MailSource ms;
 
-	private String RECEIVER_MAIL_ADDRESS;
+	private String receiverMailAddress;
 
 	// Get the session object
 	private Properties props = new Properties();
 
-	public MailSender(String RECEIVER_MAIL_ADDRESS, MailSource ms) {
+	public MailSendingUtils(MailSource ms) {
 		props.put("mail.smtp.host", HOST);
 		props.put("mail.smtp.auth", "true");
 		this.ms = ms;
-		this.RECEIVER_MAIL_ADDRESS = RECEIVER_MAIL_ADDRESS;
+	}
+
+	public void setReceiverMailAddress(String receiverMailAddress) {
+		this.receiverMailAddress = receiverMailAddress;
 	}
 
 	private void sendMail(String subject, String mailMessage) {
@@ -48,8 +45,8 @@ public class MailSender {
 	private MimeMessage setMailBasic(String subject) throws MessagingException, AddressException {
 		Session session = getMailSenderSession();
 		MimeMessage message = new MimeMessage(session);
-		message.setFrom(new InternetAddress(ms.getSender()));
-		message.addRecipient(Message.RecipientType.TO, new InternetAddress(RECEIVER_MAIL_ADDRESS));
+		message.setFrom(new InternetAddress(ms.getMailSenderId()));
+		message.addRecipient(Message.RecipientType.TO, new InternetAddress(receiverMailAddress));
 		message.setSubject(subject);
 		return message;
 	}
@@ -57,7 +54,7 @@ public class MailSender {
 	private Session getMailSenderSession() {
 		return Session.getDefaultInstance(props, new javax.mail.Authenticator() {
 			protected PasswordAuthentication getPasswordAuthentication() {
-				return new PasswordAuthentication(ms.getSender(), ms.getSender_password());
+				return new PasswordAuthentication(ms.getMailSenderId(), ms.getMailSenderPassword());
 			}
 		});
 	}
@@ -68,7 +65,7 @@ public class MailSender {
 	}
 
 	private String generateMailMessageForToken(Token token) {
-		return "Link : " + ms.getDomainForToken() + "?token=" + token.getTokenValue();
+		return "Link : " + ms.getMailTokenLinkUrl() + "?token=" + token.getTokenValue();
 	}
 
 }
