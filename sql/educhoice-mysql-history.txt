@@ -1,0 +1,603 @@
+#### CSV Parsing
+## seoul parsing
+SELECT
+@id := @id + 1 AS academy_id
+, 학원명 AS academy_name
+, 학원주소 AS address
+, 설립자_성명 AS `owner_name`
+, 전화번호 AS `phone_no`
+, 교습과정 AS course_type
+, GROUP_CONCAT(DISTINCT 교습과목) AS courses
+, GROUP_CONCAT(총교습비) AS tuitions
+, IF(ROUND(AVG(IF(총교습비<10,총교습비*100,총교습비)))*1000 = 0,'',ROUND(AVG(IF(총교습비<10,총교습비*100,총교습비)))*1000 ) AS tuition
+FROM seoul_address, (SELECT @id:=0) var
+WHERE 교습과정 LIKE '%보습%'
+GROUP BY academy_name,address
+
+## Incheon
+SELECT
+@id := @id + 1 AS academy_id
+, 학원명 AS academy_name
+, 학원주소 AS address
+, 전화번호 AS `phone_no`
+, 교습과정 AS course_type
+, GROUP_CONCAT(DISTINCT 교습과목) AS courses
+, GROUP_CONCAT(총교습비) AS tuitions
+, IF(ROUND(AVG(IF(총교습비<10,총교습비*100,총교습비)))*1000 = 0,'',ROUND(AVG(IF(총교습비<10,총교습비*100,총교습비)))*1000 ) AS tuition
+FROM incheon_address, (SELECT @id:=0) var
+WHERE 교습과정 LIKE '%보습%'
+GROUP BY academy_name,address
+
+## Gyeonggi
+SELECT
+@id := @id + 1 AS academy_id
+, 지역 AS region
+, 학원명 AS academy_name
+, 주소 AS address
+, 설립자_성명 AS `owner_name`
+, 전화번호 AS `phone_no`
+, 교습과정 AS course_type
+, GROUP_CONCAT(DISTINCT 교습과목) AS courses
+, GROUP_CONCAT(교습비) AS tuitions
+, IF(ROUND(AVG(IF(총교습비<10,총교습비*100,총교습비)))*1000 = 0,'',ROUND(AVG(IF(총교습비<10,총교습비*100,총교습비)))*1000 ) AS tuition
+FROM gyeonggi_address, (SELECT @id:=0) var
+WHERE 교습과정 LIKE '%보습%'
+GROUP BY academy_name,address
+
+#### SELECT RESURT TO EXPORT SQL
+
+#### rz SQL File to Devel Server
+
+#### EXCUTE SQL File
+
+source /data/csv/sqldump/incheon_address_parsing.sql;
+source /data/csv/sqldump/seoul_address_parsing.sql; 
+source /data/csv/sqldump/gyeonggi_address_parsing.sql
+
+#### address ㅡㅡ. 
+### 서울특별시 금천구 가산디지털1로 2 , 709호 (가산동, 우림라이온스밸리 2차) | 서울 금천구 가산디지털1로 2
+
+CREATE TABLE seoul_address_temp
+SELECT
+academy_id
+, academy_name
+, IF(RIGHT(SUBSTRING_INDEX(address,' ',5),1)=',',SUBSTRING_INDEX(address,',',1),SUBSTRING_INDEX(address,' ',5)) AS address
+, owner_name
+, phone_no
+, course_type
+, courses
+, tuition
+FROM seoul_address_parsing
+
+CREATE TABLE incheon_address_temp
+SELECT
+academy_id
+, academy_name
+, IF(RIGHT(SUBSTRING_INDEX(address,' ',5),1)=',',SUBSTRING_INDEX(address,',',1),SUBSTRING_INDEX(address,' ',5)) AS address
+, phone_no
+, course_type
+, courses
+, tuition
+FROM incheon_address_parsing
+
+CREATE TABLE gyeonggi_address_temp
+SELECT 
+academy_id
+, region
+, academy_name
+, IF(RIGHT(SUBSTRING_INDEX(address,' ',5),1)=',',SUBSTRING_INDEX(address,',',1),SUBSTRING_INDEX(address,' ',5)) AS address
+, owner_name
+, phone_no
+, course_type
+, courses
+, tuition
+FROM gyeonggi_address_parsing
+
+
+############################## ACADEMY ADDRESS FULL DATA SELECT
+SELECT
+@id := @id + 1 AS academy_id
+, address
+, jubun_address
+, road_address
+, sido
+, sigungu
+, dong
+, zonecode
+FROM
+(
+SELECT
+academy_id
+, CONCAT(address, ' ',building) AS address
+, address AS jubun_address
+, road_address
+, sido
+, sigungu
+, SUBSTRING_INDEX(
+IF(SUBSTRING_INDEX(address,'가 ',1) = address,
+IF(SUBSTRING_INDEX(address,'읍 ',1) = address,
+IF(SUBSTRING_INDEX(address,'면 ',1) = address,
+CONCAT(SUBSTRING_INDEX(address,'동 ',1),'동')
+, CONCAT(SUBSTRING_INDEX(address,'면 ',1),'면'))
+, CONCAT(SUBSTRING_INDEX(address,'읍 ',1),'읍'))
+,SUBSTRING_INDEX(address,' ',3)),' ',-1) AS dong
+, zip_code AS zonecode
+FROM seoul_address
+UNION 
+SELECT 
+academy_id
+, CONCAT(address, ' ',building) AS address
+, address AS jubun_address
+, road_address
+, sido
+, sigungu
+, SUBSTRING_INDEX(
+IF(SUBSTRING_INDEX(address,'가 ',1) = address,
+IF(SUBSTRING_INDEX(address,'읍 ',1) = address,
+IF(SUBSTRING_INDEX(address,'면 ',1) = address,
+CONCAT(SUBSTRING_INDEX(address,'동 ',1),'동')
+, CONCAT(SUBSTRING_INDEX(address,'면 ',1),'면'))
+, CONCAT(SUBSTRING_INDEX(address,'읍 ',1),'읍'))
+,SUBSTRING_INDEX(address,' ',3)),' ',-1) AS dong
+, zip_code AS zonecode
+FROM incheon_address
+UNION 
+SELECT 
+academy_id
+, CONCAT(address, ' ',building) AS address
+, address AS jubun_address
+, road_address
+, sido
+, sigungu
+, SUBSTRING_INDEX(
+IF(SUBSTRING_INDEX(address,'가 ',1) = address,
+IF(SUBSTRING_INDEX(address,'읍 ',1) = address,
+IF(SUBSTRING_INDEX(address,'면 ',1) = address,
+CONCAT(SUBSTRING_INDEX(address,'동 ',1),'동')
+, CONCAT(SUBSTRING_INDEX(address,'면 ',1),'면'))
+, CONCAT(SUBSTRING_INDEX(address,'읍 ',1),'읍'))
+,SUBSTRING_INDEX(address,' ',3)),' ',-1) AS dong
+, zip_code AS zonecode
+FROM gyeonggi_address
+) AS address_data
+, (SELECT @id:=0) var
+
+
+############################### Dong Generate SQL
+SELECT
+@id := @id + 1 AS dong_id
+, dong_name
+FROM
+(
+SELECT
+DISTINCT SUBSTRING_INDEX(
+IF(SUBSTRING_INDEX(address,'가 ',1) = address,
+IF(SUBSTRING_INDEX(address,'읍 ',1) = address,
+IF(SUBSTRING_INDEX(address,'면 ',1) = address,
+CONCAT(SUBSTRING_INDEX(address,'동 ',1),'동')
+, CONCAT(SUBSTRING_INDEX(address,'면 ',1),'면'))
+, CONCAT(SUBSTRING_INDEX(address,'읍 ',1),'읍'))
+,SUBSTRING_INDEX(address,' ',3)),' ',-1) AS dong_name
+FROM seoul_address
+UNION
+SELECT
+DISTINCT SUBSTRING_INDEX(
+IF(SUBSTRING_INDEX(address,'가 ',1) = address,
+IF(SUBSTRING_INDEX(address,'읍 ',1) = address,
+IF(SUBSTRING_INDEX(address,'면 ',1) = address,
+CONCAT(SUBSTRING_INDEX(address,'동 ',1),'동')
+, CONCAT(SUBSTRING_INDEX(address,'면 ',1),'면'))
+, CONCAT(SUBSTRING_INDEX(address,'읍 ',1),'읍'))
+,SUBSTRING_INDEX(address,' ',3)),' ',-1) AS dong_name
+FROM incheon_address
+UNION
+SELECT
+DISTINCT SUBSTRING_INDEX(
+IF(SUBSTRING_INDEX(address,'가 ',1) = address,
+IF(SUBSTRING_INDEX(address,'읍 ',1) = address,
+IF(SUBSTRING_INDEX(address,'면 ',1) = address,
+CONCAT(SUBSTRING_INDEX(address,'동 ',1),'동')
+, CONCAT(SUBSTRING_INDEX(address,'면 ',1),'면'))
+, CONCAT(SUBSTRING_INDEX(address,'읍 ',1),'읍'))
+,SUBSTRING_INDEX(address,' ',3)),' ',-1) AS dong_name
+FROM gyeonggi_address
+) AS dong_data , (SELECT @id:=0) var
+############################### Generate ACADEMY_ADDRESS SQL
+SELECT
+@id := @id + 1 AS academy_id
+, address
+, jubun_address
+, road_address
+, sido
+, sigungu
+, dong_id
+, zonecode
+FROM
+(
+SELECT
+address
+, jubun_address
+, road_address
+, sido
+, sigungu
+, dong_id
+, zonecode
+FROM
+(
+SELECT
+academy_id
+, CONCAT(address, ' ',building) AS address
+, address AS jubun_address
+, road_address
+, sido
+, sigungu
+, zip_code AS zonecode
+FROM seoul_address
+UNION 
+SELECT 
+academy_id
+, CONCAT(address, ' ',building) AS address
+, address AS jubun_address
+, road_address
+, sido
+, sigungu
+, zip_code AS zonecode
+FROM incheon_address
+UNION 
+SELECT
+academy_id
+, CONCAT(address, ' ',building) AS address
+, address AS jubun_address
+, road_address
+, sido
+, sigungu
+, zip_code AS zonecode
+FROM gyeonggi_address
+) AS address_data
+LEFT JOIN dong 
+ON dong.dong_name = SUBSTRING_INDEX(
+IF(SUBSTRING_INDEX(address,'가 ',1) = address,
+IF(SUBSTRING_INDEX(address,'읍 ',1) = address,
+IF(SUBSTRING_INDEX(address,'면 ',1) = address,
+CONCAT(SUBSTRING_INDEX(address,'동 ',1),'동')
+, CONCAT(SUBSTRING_INDEX(address,'면 ',1),'면'))
+, CONCAT(SUBSTRING_INDEX(address,'읍 ',1),'읍'))
+,SUBSTRING_INDEX(address,' ',3)),' ',-1)
+) AS address_data_dong
+, (SELECT @id:=0) var
+
+
+
+###############################
+START Dummy Data Insert || Actual data may have different relationships
+############################### Dummy Basic Account Insert Query
+INSERT INTO basic_account
+SELECT
+@id := @id + 1 AS account_id
+, CONCAT(@id,'@gmail.com') AS email
+, '1234' AS PASSWORD
+, 'PAID_USER' AS roles
+FROM 
+(
+SELECT
+academy_name
+, owner_name
+, phone_no
+FROM seoul_csv
+UNION
+SELECT
+academy_name
+, owner_name
+, phone_no
+FROM incheon_csv
+UNION
+SELECT
+academy_name
+, owner_name
+, phone_no
+FROM gyeonggi_csv
+) AS basic_account_data_dummmy
+, (SELECT @id:=0) var 
+
+
+############################### Dummy Corporate Account Insert Query
+INSERT INTO corporate_account
+
+SELECT 
+owner_name
+, phone_no
+, basic_account.account_id
+FROM
+( 
+SELECT
+@id := @id + 1 AS academy_id
+, academy_name
+, owner_name
+, phone_no
+FROM
+(
+SELECT
+academy_name
+, owner_name
+, phone_no
+FROM seoul_csv
+UNION
+SELECT
+academy_name
+, owner_name
+, phone_no
+FROM incheon_csv
+UNION
+SELECT
+academy_name
+, owner_name
+, phone_no
+FROM gyeonggi_csv
+) AS `data`, (SELECT @id:=0) var 
+) AS csv_data
+LEFT JOIN basic_account ON basic_account.account_id = csv_data.academy_id
+############################### Dummy Academy Insert Query
+INSERT INTO academy
+
+SELECT
+corporate_account.account_id
+, academy_name
+, TRUE AS car_available
+, corporate_account.account_id
+FROM
+(
+SELECT 
+@id := @id + 1 AS academy_id
+, academy_name
+FROM
+(
+SELECT
+academy_name
+, owner_name
+, phone_no
+FROM seoul_csv
+UNION
+SELECT
+academy_name
+, owner_name
+, phone_no
+FROM incheon_csv
+UNION
+SELECT
+academy_name
+, owner_name
+, phone_no
+FROM gyeonggi_csv
+) AS `data`, (SELECT @id:=0) var 
+) AS academy_name_data
+LEFT JOIN corporate_account ON corporate_account.account_id = academy_name_data.academy_id
+
+############################### Dummy corporate_account_owned_academies
+INSERT INTO corporate_account_owned_academies
+
+SELECT
+@id := @id + 1 AS corporate_account_account_id
+, @id AS owned_academies_academy_id
+FROM 
+(
+SELECT
+academy_name
+, owner_name
+, phone_no
+FROM seoul_csv
+UNION
+SELECT
+academy_name
+, owner_name
+, phone_no
+FROM incheon_csv
+UNION
+SELECT
+academy_name
+, owner_name
+, phone_no
+FROM gyeonggi_csv
+) AS basic_account_data_dummmy
+, (SELECT @id:=0) var 
+###############################
+END 
+###############################
+ETC
+############################### CSV 
+INSERT INTO temp_csv
+SELECT
+@id := @id + 1 AS account_id
+, academy_name
+, address AS address
+FROM
+(
+SELECT
+academy_name
+, IF(RIGHT(SUBSTRING_INDEX(address,' ',4),1)=',',SUBSTRING_INDEX(address,',',1),SUBSTRING_INDEX(address,' ',4)) AS address
+, owner_name
+, phone_no
+FROM seoul_csv
+UNION
+SELECT
+academy_name
+, IF(RIGHT(SUBSTRING_INDEX(address,' ',4),1)=',',SUBSTRING_INDEX(address,',',1),SUBSTRING_INDEX(address,' ',4)) AS address
+, owner_name
+, phone_no
+FROM incheon_csv
+UNION
+SELECT
+academy_name
+, IF(RIGHT(SUBSTRING_INDEX(address,' ',4),1)=',',SUBSTRING_INDEX(address,',',1),SUBSTRING_INDEX(address,' ',4)) AS address
+, owner_name
+, phone_no
+FROM gyeonggi_csv
+) AS csv_data
+, (SELECT @id:=0) var 
+############################### ACADEMY && CORPORATE && BASIC_ACCOUNT SELECT QUERY
+SELECT
+academy.academy_id
+, owner_name
+, phone_no
+, academy.academy_name
+, owner_name
+, phone_no
+FROM
+(
+SELECT
+academy_name
+, owner_name
+, phone_no
+FROM seoul_csv
+UNION
+SELECT
+academy_name
+, owner_name
+, phone_no
+FROM incheon_csv
+UNION
+SELECT
+academy_name
+, owner_name
+, phone_no
+FROM gyeonggi_csv
+) AS csv_data
+LEFT JOIN academy ON academy.academy_name = csv_data.academy_name
+LEFT JOIN basic_account ON basic_account.account_id = academy.academy_id
+###############################  ???
+
+INSERT INTO academy_address (academy_id)
+SELECT academy_id
+FROM academy
+
+###############################
+INSERT INTO academy_address
+SELECT
+@id := @id + 1 AS id
+, academy_id
+, CONCAT(address, ' ',building) AS address
+, address AS jubun_address
+, road_address
+, sido
+, sigungu
+, zip_code AS zonecode
+FROM temp_address_data, (SELECT @id:=0) var
+
+INSERT INTO academy
+SELECT
+*
+FROM
+(
+SELECT 
+@id := @id + 1 AS academy_id
+, academy_name AS academyName
+, TRUE AS car_available
+, NULL AS corporate_account_account_id
+FROM data_temp.`temp` AS a, (SELECT @id:=0) var
+) AS total
+
+
+######################
+CREATE TABLE `temp_address_data` (
+  academy_id INT NOT NULL,
+  temp_address_identifier VARCHAR(255) NOT NULL,
+  road_address VARCHAR(255) DEFAULT NULL,
+  address VARCHAR(255) NOT NULL,
+  building VARCHAR(255) NOT NULL,
+  sido VARCHAR(255) NOT NULL,
+  sigungu VARCHAR(255) NOT NULL,
+  dong VARCHAR(255) NOT NULL,
+  zip_code VARCHAR(255) NOT NULL,
+  latitude VARCHAR(255) NOT NULL,
+  longitude VARCHAR(255) NOT NULL
+) ENGINE=INNODB DEFAULT CHARSET=utf8  
+
+CREATE TABLE `temp_data` (
+  temp_identifier VARCHAR(255) NOT NULL,
+  academy_name VARCHAR(255) NOT NULL,
+  address VARCHAR(255) DEFAULT NULL,
+  `owner_name` VARCHAR(255) NOT NULL,
+  phone_no VARCHAR(255) NOT NULL
+) ENGINE=INNODB DEFAULT CHARSET=utf8  
+
+
+INSERT INTO temp_data
+SELECT
+CONCAT(academy_name,'-',SUBSTRING_INDEX(address,' ',4)) AS temp_identifier
+, academy_name
+, address
+, owner_name
+, phone_no
+FROM temp
+
+
+INSERT INTO temp_address_data
+SELECT 
+@id := @id + 1 AS academy_id
+, CONCAT(temp_address.academy_name,'-',identifier) AS temp_address_identifier 
+, road_address
+, address
+, building
+, sido
+, sigungu
+, dong
+, zip_code
+, latitude
+, longitude
+FROM temp_address 
+LEFT JOIN 
+(
+SELECT 
+academy_name
+, IF(SUBSTRING_INDEX(road_address,' ',1) = '서울'
+,CONCAT(SUBSTRING_INDEX(road_address,' ',1),'특별시 ',SUBSTR(road_address,4))
+,road_address) AS identifier 
+FROM temp_address 
+) AS converter ON temp_address.academy_name = converter.academy_name, (SELECT @id:=0) var
+
+################
+
+CREATE TABLE `academy_address` (
+  `id` bigint(20) NOT NULL AUTO_INCREMENT,
+  `academy_id` varchar(255) DEFAULT NULL,
+  `address` varchar(255) DEFAULT NULL,
+  `jibun_address` varchar(255) DEFAULT NULL,
+  `latitude` double NOT NULL,
+  `longitude` double NOT NULL,
+  `road_address` varchar(255) DEFAULT NULL,
+  `sido` varchar(255) DEFAULT NULL,
+  `sigungu` varchar(255) DEFAULT NULL,
+  `zonecode` varchar(255) DEFAULT NULL,
+  `dong_id` bigint(20) DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  KEY `FKdfrqscg8gr33ktxcsohc4nhrf` (`dong_id`),
+  CONSTRAINT `FKdfrqscg8gr33ktxcsohc4nhrf` FOREIGN KEY (`dong_id`) REFERENCES `dong` (`dong_id`)
+) ENGINE=InnoDB AUTO_INCREMENT=16384 DEFAULT CHARSET=utf8
+
+
+
+INSERT INTO academy_address
+(
+academy_id
+, address
+, jibun_address
+, latitude
+, longitude
+, road_address
+, sido
+, sigungu
+, zonecode
+, dong_id
+)
+SELECT
+@id := @id + 1 AS academy_id
+, address
+, jibun_address
+, latitude
+, longitude
+, road_address
+, sido
+, sigungu
+, zonecode
+, dong_id
+FROM
+temp_address, (SELECT @id:=0) var 
