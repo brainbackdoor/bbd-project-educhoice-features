@@ -1,47 +1,49 @@
+CREATE DATABASE [ë°ì´í„°ë² ì´ìŠ¤ëª…] DEFAULT CHARACTER SET utf8 COLLATE utf8_general_ci;
+
 #### CSV Parsing
 ## seoul parsing
 SELECT
 @id := @id + 1 AS academy_id
-, ÇĞ¿ø¸í AS academy_name
-, ÇĞ¿øÁÖ¼Ò AS address
-, ¼³¸³ÀÚ_¼º¸í AS `owner_name`
-, ÀüÈ­¹øÈ£ AS `phone_no`
-, ±³½À°úÁ¤ AS course_type
-, GROUP_CONCAT(DISTINCT ±³½À°ú¸ñ) AS courses
-, GROUP_CONCAT(ÃÑ±³½Àºñ) AS tuitions
-, IF(ROUND(AVG(IF(ÃÑ±³½Àºñ<10,ÃÑ±³½Àºñ*100,ÃÑ±³½Àºñ)))*1000 = 0,'',ROUND(AVG(IF(ÃÑ±³½Àºñ<10,ÃÑ±³½Àºñ*100,ÃÑ±³½Àºñ)))*1000 ) AS tuition
+, í•™ì›ëª… AS academy_name
+, í•™ì›ì£¼ì†Œ AS address
+, ì„¤ë¦½ì_ì„±ëª… AS `owner_name`
+, ì „í™”ë²ˆí˜¸ AS `phone_no`
+, êµìŠµê³¼ì • AS course_type
+, GROUP_CONCAT(DISTINCT êµìŠµê³¼ëª©) AS courses
+, GROUP_CONCAT(ì´êµìŠµë¹„) AS tuitions
+, IF(ROUND(AVG(IF(ì´êµìŠµë¹„<10,ì´êµìŠµë¹„*100,ì´êµìŠµë¹„)))*1000 = 0,'',ROUND(AVG(IF(ì´êµìŠµë¹„<10,ì´êµìŠµë¹„*100,ì´êµìŠµë¹„)))*1000 ) AS tuition
 FROM seoul_address, (SELECT @id:=0) var
-WHERE ±³½À°úÁ¤ LIKE '%º¸½À%'
+WHERE êµìŠµê³¼ì • LIKE '%ë³´ìŠµ%'
 GROUP BY academy_name,address
 
 ## Incheon
 SELECT
 @id := @id + 1 AS academy_id
-, ÇĞ¿ø¸í AS academy_name
-, ÇĞ¿øÁÖ¼Ò AS address
-, ÀüÈ­¹øÈ£ AS `phone_no`
-, ±³½À°úÁ¤ AS course_type
-, GROUP_CONCAT(DISTINCT ±³½À°ú¸ñ) AS courses
-, GROUP_CONCAT(ÃÑ±³½Àºñ) AS tuitions
-, IF(ROUND(AVG(IF(ÃÑ±³½Àºñ<10,ÃÑ±³½Àºñ*100,ÃÑ±³½Àºñ)))*1000 = 0,'',ROUND(AVG(IF(ÃÑ±³½Àºñ<10,ÃÑ±³½Àºñ*100,ÃÑ±³½Àºñ)))*1000 ) AS tuition
+, í•™ì›ëª… AS academy_name
+, í•™ì›ì£¼ì†Œ AS address
+, ì „í™”ë²ˆí˜¸ AS `phone_no`
+, êµìŠµê³¼ì • AS course_type
+, GROUP_CONCAT(DISTINCT êµìŠµê³¼ëª©) AS courses
+, GROUP_CONCAT(ì´êµìŠµë¹„) AS tuitions
+, IF(ROUND(AVG(IF(ì´êµìŠµë¹„<10,ì´êµìŠµë¹„*100,ì´êµìŠµë¹„)))*1000 = 0,'',ROUND(AVG(IF(ì´êµìŠµë¹„<10,ì´êµìŠµë¹„*100,ì´êµìŠµë¹„)))*1000 ) AS tuition
 FROM incheon_address, (SELECT @id:=0) var
-WHERE ±³½À°úÁ¤ LIKE '%º¸½À%'
+WHERE êµìŠµê³¼ì • LIKE '%ë³´ìŠµ%'
 GROUP BY academy_name,address
 
 ## Gyeonggi
 SELECT
 @id := @id + 1 AS academy_id
-, Áö¿ª AS region
-, ÇĞ¿ø¸í AS academy_name
-, ÁÖ¼Ò AS address
-, ¼³¸³ÀÚ_¼º¸í AS `owner_name`
-, ÀüÈ­¹øÈ£ AS `phone_no`
-, ±³½À°úÁ¤ AS course_type
-, GROUP_CONCAT(DISTINCT ±³½À°ú¸ñ) AS courses
-, GROUP_CONCAT(±³½Àºñ) AS tuitions
-, IF(ROUND(AVG(IF(ÃÑ±³½Àºñ<10,ÃÑ±³½Àºñ*100,ÃÑ±³½Àºñ)))*1000 = 0,'',ROUND(AVG(IF(ÃÑ±³½Àºñ<10,ÃÑ±³½Àºñ*100,ÃÑ±³½Àºñ)))*1000 ) AS tuition
+, ì§€ì—­ AS region
+, í•™ì›ëª… AS academy_name
+, ì£¼ì†Œ AS address
+, ì„¤ë¦½ì_ì„±ëª… AS `owner_name`
+, ì „í™”ë²ˆí˜¸ AS `phone_no`
+, êµìŠµê³¼ì • AS course_type
+, GROUP_CONCAT(DISTINCT êµìŠµê³¼ëª©) AS courses
+, GROUP_CONCAT(êµìŠµë¹„) AS tuitions
+, IF(ROUND(AVG(IF(ì´êµìŠµë¹„<10,ì´êµìŠµë¹„*100,ì´êµìŠµë¹„)))*1000 = 0,'',ROUND(AVG(IF(ì´êµìŠµë¹„<10,ì´êµìŠµë¹„*100,ì´êµìŠµë¹„)))*1000 ) AS tuition
 FROM gyeonggi_address, (SELECT @id:=0) var
-WHERE ±³½À°úÁ¤ LIKE '%º¸½À%'
+WHERE êµìŠµê³¼ì • LIKE '%ë³´ìŠµ%'
 GROUP BY academy_name,address
 
 #### SELECT RESURT TO EXPORT SQL
@@ -54,8 +56,8 @@ source /data/csv/sqldump/incheon_address_parsing.sql;
 source /data/csv/sqldump/seoul_address_parsing.sql; 
 source /data/csv/sqldump/gyeonggi_address_parsing.sql
 
-#### address ¤Ñ¤Ñ. 
-### ¼­¿ïÆ¯º°½Ã ±İÃµ±¸ °¡»êµğÁöÅĞ1·Î 2 , 709È£ (°¡»êµ¿, ¿ì¸²¶óÀÌ¿Â½º¹ë¸® 2Â÷) | ¼­¿ï ±İÃµ±¸ °¡»êµğÁöÅĞ1·Î 2
+#### address ã…¡ã…¡. 
+### ì„œìš¸íŠ¹ë³„ì‹œ ê¸ˆì²œêµ¬ ê°€ì‚°ë””ì§€í„¸1ë¡œ 2 , 709í˜¸ (ê°€ì‚°ë™, ìš°ë¦¼ë¼ì´ì˜¨ìŠ¤ë°¸ë¦¬ 2ì°¨) | ì„œìš¸ ê¸ˆì²œêµ¬ ê°€ì‚°ë””ì§€í„¸1ë¡œ 2
 
 CREATE TABLE seoul_address_temp
 SELECT
@@ -114,12 +116,12 @@ academy_id
 , sido
 , sigungu
 , SUBSTRING_INDEX(
-IF(SUBSTRING_INDEX(address,'°¡ ',1) = address,
-IF(SUBSTRING_INDEX(address,'À¾ ',1) = address,
-IF(SUBSTRING_INDEX(address,'¸é ',1) = address,
-CONCAT(SUBSTRING_INDEX(address,'µ¿ ',1),'µ¿')
-, CONCAT(SUBSTRING_INDEX(address,'¸é ',1),'¸é'))
-, CONCAT(SUBSTRING_INDEX(address,'À¾ ',1),'À¾'))
+IF(SUBSTRING_INDEX(address,'ê°€ ',1) = address,
+IF(SUBSTRING_INDEX(address,'ì ',1) = address,
+IF(SUBSTRING_INDEX(address,'ë©´ ',1) = address,
+CONCAT(SUBSTRING_INDEX(address,'ë™ ',1),'ë™')
+, CONCAT(SUBSTRING_INDEX(address,'ë©´ ',1),'ë©´'))
+, CONCAT(SUBSTRING_INDEX(address,'ì ',1),'ì'))
 ,SUBSTRING_INDEX(address,' ',3)),' ',-1) AS dong
 , zip_code AS zonecode
 FROM seoul_address
@@ -132,12 +134,12 @@ academy_id
 , sido
 , sigungu
 , SUBSTRING_INDEX(
-IF(SUBSTRING_INDEX(address,'°¡ ',1) = address,
-IF(SUBSTRING_INDEX(address,'À¾ ',1) = address,
-IF(SUBSTRING_INDEX(address,'¸é ',1) = address,
-CONCAT(SUBSTRING_INDEX(address,'µ¿ ',1),'µ¿')
-, CONCAT(SUBSTRING_INDEX(address,'¸é ',1),'¸é'))
-, CONCAT(SUBSTRING_INDEX(address,'À¾ ',1),'À¾'))
+IF(SUBSTRING_INDEX(address,'ê°€ ',1) = address,
+IF(SUBSTRING_INDEX(address,'ì ',1) = address,
+IF(SUBSTRING_INDEX(address,'ë©´ ',1) = address,
+CONCAT(SUBSTRING_INDEX(address,'ë™ ',1),'ë™')
+, CONCAT(SUBSTRING_INDEX(address,'ë©´ ',1),'ë©´'))
+, CONCAT(SUBSTRING_INDEX(address,'ì ',1),'ì'))
 ,SUBSTRING_INDEX(address,' ',3)),' ',-1) AS dong
 , zip_code AS zonecode
 FROM incheon_address
@@ -150,12 +152,12 @@ academy_id
 , sido
 , sigungu
 , SUBSTRING_INDEX(
-IF(SUBSTRING_INDEX(address,'°¡ ',1) = address,
-IF(SUBSTRING_INDEX(address,'À¾ ',1) = address,
-IF(SUBSTRING_INDEX(address,'¸é ',1) = address,
-CONCAT(SUBSTRING_INDEX(address,'µ¿ ',1),'µ¿')
-, CONCAT(SUBSTRING_INDEX(address,'¸é ',1),'¸é'))
-, CONCAT(SUBSTRING_INDEX(address,'À¾ ',1),'À¾'))
+IF(SUBSTRING_INDEX(address,'ê°€ ',1) = address,
+IF(SUBSTRING_INDEX(address,'ì ',1) = address,
+IF(SUBSTRING_INDEX(address,'ë©´ ',1) = address,
+CONCAT(SUBSTRING_INDEX(address,'ë™ ',1),'ë™')
+, CONCAT(SUBSTRING_INDEX(address,'ë©´ ',1),'ë©´'))
+, CONCAT(SUBSTRING_INDEX(address,'ì ',1),'ì'))
 ,SUBSTRING_INDEX(address,' ',3)),' ',-1) AS dong
 , zip_code AS zonecode
 FROM gyeonggi_address
@@ -171,34 +173,34 @@ FROM
 (
 SELECT
 DISTINCT SUBSTRING_INDEX(
-IF(SUBSTRING_INDEX(address,'°¡ ',1) = address,
-IF(SUBSTRING_INDEX(address,'À¾ ',1) = address,
-IF(SUBSTRING_INDEX(address,'¸é ',1) = address,
-CONCAT(SUBSTRING_INDEX(address,'µ¿ ',1),'µ¿')
-, CONCAT(SUBSTRING_INDEX(address,'¸é ',1),'¸é'))
-, CONCAT(SUBSTRING_INDEX(address,'À¾ ',1),'À¾'))
+IF(SUBSTRING_INDEX(address,'ê°€ ',1) = address,
+IF(SUBSTRING_INDEX(address,'ì ',1) = address,
+IF(SUBSTRING_INDEX(address,'ë©´ ',1) = address,
+CONCAT(SUBSTRING_INDEX(address,'ë™ ',1),'ë™')
+, CONCAT(SUBSTRING_INDEX(address,'ë©´ ',1),'ë©´'))
+, CONCAT(SUBSTRING_INDEX(address,'ì ',1),'ì'))
 ,SUBSTRING_INDEX(address,' ',3)),' ',-1) AS dong_name
 FROM seoul_address
 UNION
 SELECT
 DISTINCT SUBSTRING_INDEX(
-IF(SUBSTRING_INDEX(address,'°¡ ',1) = address,
-IF(SUBSTRING_INDEX(address,'À¾ ',1) = address,
-IF(SUBSTRING_INDEX(address,'¸é ',1) = address,
-CONCAT(SUBSTRING_INDEX(address,'µ¿ ',1),'µ¿')
-, CONCAT(SUBSTRING_INDEX(address,'¸é ',1),'¸é'))
-, CONCAT(SUBSTRING_INDEX(address,'À¾ ',1),'À¾'))
+IF(SUBSTRING_INDEX(address,'ê°€ ',1) = address,
+IF(SUBSTRING_INDEX(address,'ì ',1) = address,
+IF(SUBSTRING_INDEX(address,'ë©´ ',1) = address,
+CONCAT(SUBSTRING_INDEX(address,'ë™ ',1),'ë™')
+, CONCAT(SUBSTRING_INDEX(address,'ë©´ ',1),'ë©´'))
+, CONCAT(SUBSTRING_INDEX(address,'ì ',1),'ì'))
 ,SUBSTRING_INDEX(address,' ',3)),' ',-1) AS dong_name
 FROM incheon_address
 UNION
 SELECT
 DISTINCT SUBSTRING_INDEX(
-IF(SUBSTRING_INDEX(address,'°¡ ',1) = address,
-IF(SUBSTRING_INDEX(address,'À¾ ',1) = address,
-IF(SUBSTRING_INDEX(address,'¸é ',1) = address,
-CONCAT(SUBSTRING_INDEX(address,'µ¿ ',1),'µ¿')
-, CONCAT(SUBSTRING_INDEX(address,'¸é ',1),'¸é'))
-, CONCAT(SUBSTRING_INDEX(address,'À¾ ',1),'À¾'))
+IF(SUBSTRING_INDEX(address,'ê°€ ',1) = address,
+IF(SUBSTRING_INDEX(address,'ì ',1) = address,
+IF(SUBSTRING_INDEX(address,'ë©´ ',1) = address,
+CONCAT(SUBSTRING_INDEX(address,'ë™ ',1),'ë™')
+, CONCAT(SUBSTRING_INDEX(address,'ë©´ ',1),'ë©´'))
+, CONCAT(SUBSTRING_INDEX(address,'ì ',1),'ì'))
 ,SUBSTRING_INDEX(address,' ',3)),' ',-1) AS dong_name
 FROM gyeonggi_address
 ) AS dong_data , (SELECT @id:=0) var
@@ -256,12 +258,12 @@ FROM gyeonggi_address
 ) AS address_data
 LEFT JOIN dong 
 ON dong.dong_name = SUBSTRING_INDEX(
-IF(SUBSTRING_INDEX(address,'°¡ ',1) = address,
-IF(SUBSTRING_INDEX(address,'À¾ ',1) = address,
-IF(SUBSTRING_INDEX(address,'¸é ',1) = address,
-CONCAT(SUBSTRING_INDEX(address,'µ¿ ',1),'µ¿')
-, CONCAT(SUBSTRING_INDEX(address,'¸é ',1),'¸é'))
-, CONCAT(SUBSTRING_INDEX(address,'À¾ ',1),'À¾'))
+IF(SUBSTRING_INDEX(address,'ê°€ ',1) = address,
+IF(SUBSTRING_INDEX(address,'ì ',1) = address,
+IF(SUBSTRING_INDEX(address,'ë©´ ',1) = address,
+CONCAT(SUBSTRING_INDEX(address,'ë™ ',1),'ë™')
+, CONCAT(SUBSTRING_INDEX(address,'ë©´ ',1),'ë©´'))
+, CONCAT(SUBSTRING_INDEX(address,'ì ',1),'ì'))
 ,SUBSTRING_INDEX(address,' ',3)),' ',-1)
 ) AS address_data_dong
 , (SELECT @id:=0) var
@@ -548,8 +550,8 @@ LEFT JOIN
 (
 SELECT 
 academy_name
-, IF(SUBSTRING_INDEX(road_address,' ',1) = '¼­¿ï'
-,CONCAT(SUBSTRING_INDEX(road_address,' ',1),'Æ¯º°½Ã ',SUBSTR(road_address,4))
+, IF(SUBSTRING_INDEX(road_address,' ',1) = 'ì„œìš¸'
+,CONCAT(SUBSTRING_INDEX(road_address,' ',1),'íŠ¹ë³„ì‹œ ',SUBSTR(road_address,4))
 ,road_address) AS identifier 
 FROM temp_address 
 ) AS converter ON temp_address.academy_name = converter.academy_name, (SELECT @id:=0) var
