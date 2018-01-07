@@ -1,0 +1,45 @@
+{
+  "extends": ["airbnb", "prettier", "prettier/react"],
+  "env": {
+    "browser": true,
+    "es6": true,
+    "jest": true,
+    "node": true
+  },
+  "plugins": ["react", "prettier", "import"],
+  "parser": "babel-eslint",
+  "parserOptions": {
+    "ecmaVersion": 2017,
+    "ecmaFeatures": {
+      "jsx": true
+    }
+  },
+  "settings": {
+    "import/resolver": {
+      "webpack": {
+        "config": "config/webpack.config.dev.js"
+      }
+    }
+  },
+  "rules": {
+    "no-unused-vars": ["error", { "argsIgnorePattern": "^_" }],
+    "linebreak-style": 0,
+    "comma-dangle": ["error", "never"],
+    // https://github.com/yannickcr/eslint-plugin-react/issues/1389
+    "react/no-typos": 0,
+    "import/no-extraneous-dependencies": 0,
+    "import/extensions": ["error", { "js": "never", "jsx": "never" }],
+    "import/no-unresolved": 0,
+    "jsx-a11y/anchor-is-valid": [
+      "error",
+      {
+        "components": ["Link"],
+        "specialLink": ["to"]
+      }
+    ],
+    "no-unused-expressions": ["error", { "allowTernary": true }],
+    // 퍼포먼스 이슈로 인해, 모든 컴포넌트에 shouldComponentUpdate를 적용하기 위해 off
+    // PureComponent는 되려 Performance를 떨어뜨릴 수 있다는 Article이 왕왕 존재함
+    "react/prefer-stateless-function": 0
+  }
+}

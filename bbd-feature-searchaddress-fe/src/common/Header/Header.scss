@@ -1,0 +1,60 @@
+@import 'Common';
+
+.header {
+  padding: 1rem 0;
+  border-bottom: 1px solid $color-primary;
+
+  .container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+
+  .navigation {
+    .menu {
+      display: flex;
+
+      & > * {
+        font-size: 1rem;
+        line-height: 1.0;
+        cursor: pointer;
+
+        &:not(:last-child) {
+          margin-right: 1rem;
+        }
+
+        // customize semantic-ui component
+        .ui.compact.menu {
+          min-height: 0;
+          border: none;
+          box-shadow: none;
+        }
+
+        .ui.simple.dropdown.item {
+          padding: 0;
+          margin: 0;
+          line-height: 1.0;
+
+          &:hover,
+          &:focus {
+            background: none;
+          }
+
+          .menu {
+            transition: unset;
+          }
+        }
+      }
+    }
+  }
+
+  @include media("<desktop") {
+    .logo {
+      width: 80px;
+
+      img {
+        width: 100%
+      }
+    }
+  }
+}

@@ -1,0 +1,64 @@
+@import "~include-media/dist/include-media";
+@import "variables";
+
+html,
+body {
+  margin: 0;
+  padding: 0;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+h1 {
+  font-size: 1.8rem;
+}
+
+ul {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.visible-mobile,
+.visible-desktop {
+  display: none !important;
+}
+
+.container {
+  padding: 0 1rem;
+}
+
+.container--main {
+  margin-top: 2rem;
+  margin-bottom: 2rem;
+}
+
+@include media("<desktop") {
+  .visible-mobile {
+    display: block !important;
+  }
+  .align-space-between-mobile {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+  }
+}
+
+@include media(">=desktop") {
+  .visible-desktop {
+    display: block !important;
+  }
+}
+
+@include media(">=desktop-medium") {
+  html {
+    font-size: 120%;
+  }
+  .container {
+    width: 980px;
+    margin-left: auto;
+    margin-right: auto;
+  }
+}

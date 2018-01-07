@@ -1,0 +1,93 @@
+@import 'Common';
+@import 'PlacesAutoComplete';
+@import 'CustomSemanticUI';
+@import './SearchBox';
+
+.field {
+  &.day, &.time {
+    width: 100%;
+    max-width: 26rem;
+  }
+
+  &.time {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+
+    .timepicker {
+      max-width: 12rem;
+
+      &.start-time {
+        @include media(">=desktop") {
+          margin-right: 2rem;
+        }
+      }
+
+      .rdtPicker {
+        width: 100%;
+      }
+    }
+  }
+}
+
+.container--main {
+  /*
+  * time picker의 사용성 개선을 위해 margin bottom 크게
+  */
+  @include media(">=desktop") {
+    margin-bottom: 8rem;
+  }
+}
+
+/*
+ * 디자인의 통일성을 위해서 semantic-ui에 정의 되어 있는
+ * .ui.form input[type=text] 셀렉터에 해당하는 스타일을 copy & paste 함
+ */
+
+.search-box__selector-wrap > .ui.pointing.dropdown {
+  font-family: Lato,'Helvetica Neue',Arial,Helvetica,sans-serif;
+  outline: 0;
+  -webkit-appearance: none;
+  tap-highlight-color: rgba(255,255,255,0);
+  line-height: 1.21428571em;
+  padding: .67857143em 1em;
+  font-size: 1em;
+  background: #fff;
+  border: 1px solid rgba(34,36,38,.15);
+  border-top-color: rgba(34, 36, 38, 0.15);
+  border-top-style: solid;
+  border-top-width: 1px;
+  border-right-color: rgba(34, 36, 38, 0.15);
+  border-right-style: solid;
+  border-right-width: 1px;
+  border-bottom-color: rgba(34, 36, 38, 0.15);
+  border-bottom-style: solid;
+  border-bottom-width: 1px;
+  border-left-color: rgba(34, 36, 38, 0.15);
+  border-left-style: solid;
+  border-left-width: 1px;
+  border-image-source: initial;
+  border-image-slice: initial;
+  border-image-width: initial;
+  border-image-outset: initial;
+  border-image-repeat: initial;
+  color: rgba(0,0,0,.87);
+  border-radius: .28571429rem;
+  border-top-left-radius: 0.285714rem;
+  border-top-right-radius: 0.285714rem;
+  border-bottom-right-radius: 0.285714rem;
+  border-bottom-left-radius: 0.285714rem;
+  -webkit-box-shadow: 0 0 0 0 transparent inset;
+  box-shadow: 0 0 0 0 transparent inset;
+  -webkit-transition: color .1s ease,border-color .1s ease;
+  -o-transition: color .1s ease,border-color .1s ease;
+  transition: color .1s ease,border-color .1s ease;
+  transition-property: color, border-color;
+  transition-duration: 0.1s, 0.1s;
+  transition-timing-function: ease, ease;
+  transition-delay: initial, initial;
+
+  &.hadValue > .text {
+    color: rgba(0, 0, 0, 0.87);
+  }
+}

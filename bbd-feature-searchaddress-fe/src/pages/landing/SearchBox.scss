@@ -1,0 +1,54 @@
+@import "Common";
+
+.search-box {
+  display: flex;
+  margin-bottom: 2rem;
+
+  &__selector-wrap {
+    display: flex;
+
+    & > * {
+      @include media("<desktop") {
+        flex-basis: 100%;
+        &:not(:last-child) {
+          margin-bottom: 1rem;
+        }
+      }
+    }
+
+    @include media("<desktop") {
+      width: 100%;
+      flex-wrap: wrap;
+    }
+
+    @include media(">=desktop") {
+      justify-content: space-between;
+      flex-basis: calc(85% - 2rem);
+      margin-right: 2rem;
+
+      & > * {
+        flex-basis: calc(30% - 0.6666rem);
+
+        &:last-child {
+          flex-basis: calc(40% - 0.6666rem);
+        }
+      }
+    }
+  }
+
+  &__button {
+    &.ui.button {
+      margin-right: 0;
+
+      @include media(">=desktop") {
+        flex-basis: 15%;
+        font-size: 1.4rem;
+        padding: 0;
+      }
+    }
+
+    @include media("<desktop") {
+      width: 100%;
+    }
+  }
+}

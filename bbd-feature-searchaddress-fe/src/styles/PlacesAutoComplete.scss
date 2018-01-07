@@ -1,0 +1,9 @@
+#PlacesAutocomplete__root {
+  input { height: 100%; }
+}
+
+#PlacesAutocomplete__autocomplete-container {
+  position: absolute;
+  width: 100%;
+  z-index: 30;
+}
