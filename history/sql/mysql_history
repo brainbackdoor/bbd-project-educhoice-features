@@ -603,3 +603,129 @@ SELECT
 , dong_id
 FROM
 temp_address, (SELECT @id:=0) var 
+
+########################### 경기
+SELECT
+@id := @id + 1 AS academy_id
+, academy_name
+, address
+, owner_name
+, phone_no
+, tuition
+, teacher_count
+FROM
+(
+SELECT
+
+분야구분
+, 학원명 AS academy_name
+, IF(RIGHT(SUBSTRING_INDEX(주소,' ',5),1)=',',SUBSTRING_INDEX(주소,',',1),SUBSTRING_INDEX(주소,' ',5)) AS address
+, 설립자_성명 AS `owner_name`
+, 전화번호 AS `phone_no`
+, IF(ROUND(AVG(IF(교습비<10,교습비*100,교습비)))*1000 = 0,'',ROUND(AVG(IF(교습비<10,교습비*100,교습비)))*1000 ) AS tuition
+, COUNT(강사수) AS teacher_count
+FROM gyeonggi_address
+WHERE (분야구분 LIKE '%국제화%') OR (분야구분 LIKE '%보습%')
+GROUP BY academy_name,address
+) AS `data`
+, (SELECT @id:=0) var
+########################### 서울
+SELECT
+@id := @id + 1 AS academy_id
+, academy_name
+, address
+, owner_name
+, phone_no
+, tuition
+, teacher_count
+FROM
+(
+SELECT
+분야구분
+, 학원명 AS academy_name
+, 학원주소 AS address
+, 설립자_성명 AS `owner_name`
+, 전화번호 AS `phone_no`
+, IF(ROUND(AVG(IF(교습비<10,교습비*100,교습비)))*1000 = 0,'',ROUND(AVG(IF(교습비<10,교습비*100,교습비)))*1000 ) AS tuition
+, COUNT(강사수) AS teacher_count
+FROM seoul_address
+WHERE (분야구분 LIKE '%국제화%') OR (분야구분 LIKE '%보습%')
+GROUP BY academy_name,address
+) AS `data`
+, (SELECT @id:=0) var
+########################### 인천
+SELECT
+@id := @id + 1 AS academy_id
+, academy_name
+, address
+, owner_name
+, phone_no
+, tuition
+, teacher_count
+FROM
+(
+SELECT
+"" AS 분야구분
+, 학원명 AS academy_name
+, IF(RIGHT(SUBSTRING_INDEX(학원주소,' ',5),1)=',',SUBSTRING_INDEX(학원주소,',',1),SUBSTRING_INDEX(학원주소,' ',5)) AS address
+, "" AS `owner_name`
+, 전화번호 AS `phone_no`
+, IF(ROUND(AVG(IF(교습비<10,교습비*100,교습비)))*1000 = 0,'',ROUND(AVG(IF(교습비<10,교습비*100,교습비)))*1000 ) AS tuition
+, COUNT(강사수) AS teacher_count
+FROM incheon_address
+WHERE 교습과정 LIKE '%보습%'
+GROUP BY academy_name,address
+) AS `data`
+, (SELECT @id:=0) var
+
+########################### 통합
+SELECT
+@id := @id + 1 AS academy_id
+, academy_name
+, address
+, owner_name
+, phone_no
+, tuition
+, teacher_count
+FROM
+(
+SELECT
+분야구분
+, 학원명 AS academy_name
+, 학원주소 AS address
+, 설립자_성명 AS `owner_name`
+, 전화번호 AS `phone_no`
+, IF(ROUND(AVG(IF(교습비<10,교습비*100,교습비)))*1000 = 0,'',ROUND(AVG(IF(교습비<10,교습비*100,교습비)))*1000 ) AS tuition
+, COUNT(강사수) AS teacher_count
+FROM seoul_address
+WHERE (분야구분 LIKE '%국제화%') OR (분야구분 LIKE '%보습%')
+GROUP BY academy_name,address
+
+UNION
+SELECT
+분야구분
+, 학원명 AS academy_name
+, IF(RIGHT(SUBSTRING_INDEX(주소,' ',5),1)=',',SUBSTRING_INDEX(주소,',',1),SUBSTRING_INDEX(주소,' ',5)) AS address
+, 설립자_성명 AS `owner_name`
+, 전화번호 AS `phone_no`
+, IF(ROUND(AVG(IF(교습비<10,교습비*100,교습비)))*1000 = 0,'',ROUND(AVG(IF(교습비<10,교습비*100,교습비)))*1000 ) AS tuition
+, COUNT(강사수) AS teacher_count
+FROM gyeonggi_address
+WHERE (분야구분 LIKE '%국제화%') OR (분야구분 LIKE '%보습%')
+GROUP BY academy_name,address
+
+UNION
+SELECT
+"" AS 분야구분
+, 학원명 AS academy_name
+, IF(RIGHT(SUBSTRING_INDEX(학원주소,' ',5),1)=',',SUBSTRING_INDEX(학원주소,',',1),SUBSTRING_INDEX(학원주소,' ',5)) AS address
+, "" AS `owner_name`
+, 전화번호 AS `phone_no`
+, IF(ROUND(AVG(IF(교습비<10,교습비*100,교습비)))*1000 = 0,'',ROUND(AVG(IF(교습비<10,교습비*100,교습비)))*1000 ) AS tuition
+, COUNT(강사수) AS teacher_count
+FROM incheon_address
+WHERE 교습과정 LIKE '%보습%'
+GROUP BY academy_name,address
+) AS t
+, (SELECT @id:=0) var
+
