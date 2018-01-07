@@ -12,4 +12,4 @@ This Frontend example used a **React.JS**
 ---
 
 ### UI
-![Result](./history/image/search_address_example.png) 
+![Result](./history/image/search_address_example.jpg) 
