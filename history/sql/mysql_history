@@ -729,3 +729,49 @@ GROUP BY academy_name,address
 ) AS t
 , (SELECT @id:=0) var
 
+########################### CSV Import 
+CREATE TABLE `dummy_address_kakao` (
+  `index` bigint(20) DEFAULT NULL,
+  `address` text,
+  `sido` text,
+  `sigungu` text,
+  `dong` text,
+  `longitude` double DEFAULT NULL,
+  `latitude` double DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8
+
+LOAD DATA INFILE '/var/lib/mysql-files/address.csv'
+INTO TABLE dummy_address_kakao
+CHARACTER SET utf8mb4
+FIELDS
+    TERMINATED BY ', '
+    ENCLOSED BY '"' 
+LINES 
+    TERMINATED BY '\n'
+IGNORE 1 LINES  
+
+CREATE TABLE `dummy_address_code` (
+  `index` bigint(20) DEFAULT NULL,
+  `address` text
+) ENGINE=InnoDB DEFAULT CHARSET=utf8
+
+:1,$s/[Control]+v+m을 누른다.//g
+
+LOAD DATA INFILE '/var/lib/mysql-files/address_key_value.csv '
+INTO TABLE dummy_address_code
+CHARACTER SET utf8mb4
+FIELDS
+    TERMINATED BY ','
+    ENCLOSED BY '"' 
+LINES 
+    TERMINATED BY '\r\n'
+IGNORE 1 LINES  
+
+SELECT
+dummy_address_code.`index` AS `key`
+, dummy_address_code.address AS `value`
+, longitude 
+, latitude
+FROM dummy_address_code 
+LEFT JOIN dummy_address_kakao
+ON dummy_address_code.index = dummy_address_kakao.index
